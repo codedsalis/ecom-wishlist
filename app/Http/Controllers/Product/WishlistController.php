@@ -21,7 +21,7 @@ class WishlistController extends ApiController
     }
 
     /**
-     * Fetch list of products in user's wishlist
+     * Fetch user's wishlist
      * 
      * @response array{status: 'success', data: array{products: AnonymousResourceCollection<LengthAwarePaginator<ProductResource>>}}
      */
