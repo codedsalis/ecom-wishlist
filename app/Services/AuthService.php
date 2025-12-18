@@ -16,7 +16,7 @@ final class AuthService
             ->create([
                 'name' => $data->name,
                 'email' => $data->email,
-                'password' => password_hash($data->password, PASSWORD_BCRYPT),
+                'password' => $data->password,
             ]);
 
         return $user;
