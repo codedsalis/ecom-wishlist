@@ -14,12 +14,7 @@ final class WishlistService
     public function addProduct(User $user, Product $product): void
     {
         $wishlist = Wishlist::query()
-            ->firstOrCreate(
-                [
-                    'user_id' => $user->id,
-                ],
-                ['product_id' => $product->id]
-            );
+            ->firstOrCreate(['user_id' => $user->id]);
 
         $wishlist->products()->sync($product);
     }
@@ -27,12 +22,7 @@ final class WishlistService
     public function removeProduct(User $user, Product $product)
     {
         $wishlist = Wishlist::query()
-            ->firstOrCreate(
-                [
-                    'user_id' => $user->id,
-                ],
-                ['product_id' => $product->id]
-            );
+            ->firstOrCreate(['user_id' => $user->id]);
 
         $wishlist->products()->detach($product);
     }
