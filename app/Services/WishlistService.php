@@ -27,7 +27,7 @@ final class WishlistService
         $wishlist = Wishlist::query()
             ->firstOrCreate(['user_id' => $user->id]);
 
-        $wishlist->products()->sync($product);
+        $wishlist->products()->syncWithoutDetaching($product);
     }
 
     /**
