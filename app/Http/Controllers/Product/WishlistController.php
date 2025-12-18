@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Product;
 use App\Http\Controllers\ApiController;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
-use App\Models\Wishlist;
 use App\Services\WishlistService;
 use Dedoc\Scramble\Attributes\Group;
 use Illuminate\Http\Request;
