@@ -1,59 +1,223 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# E‑Commerce Wishlist API
+ 
+A RESTful API that provides authentication, product management, and wishlist functionality. This project demonstrates clean architecture using Controllers, Services, DTOs, API Resources, Sanctum authentication, and Pest testing.
+ 
+---
+ 
+## 🚀 Features
+ 
+* User registration & authentication (Laravel Sanctum)
+* Product listing with pagination & search
+* Single product retrieval
+* Wishlist management (add/remove products)
+* Paginated wishlist products
+* Clean API response structure
+* OpenAPI documentation via Scramble
+* Feature tests written with Pest
+ 
+---
+ 
+## 🛠 Tech Stack
+ 
+* **Framework:** Laravel 12
+* **PHP:** >= 8.2
+* **Authentication:** Laravel Sanctum
+* **Database:** MySQL / SQLite (for testing)
+* **Testing:** Pest PHP
+* **API Documentation:** Dedoc Scramble
+ 
+---
+ 
+## ✅ Requirements
+ 
+Ensure the following are installed on your machine before running the project:
+ 
+* PHP **8.2 or higher**
+* Composer
+* MySQL 8+ or SQLite
+* Git
+ 
+---
+ 
+## ▶️ Getting Started
+ 
+Follow these steps to get the API running locally.
+ 
+### 1. Clone the repository
+ 
+```bash
+git clone <repository-url>
+cd ecom-wishlist
+```
+ 
+### 2. Install PHP dependencies
+ 
+```bash
+composer install
+```
+ 
+### 3. Environment setup
+ 
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+ 
+Update your database credentials in `.env`.
+ 
+### 4. Run database migrations
+ 
+```bash
+php artisan migrate
+```
+ 
+Seed the database for test products data:
+ 
+```bash
+php artisan db:seed
+```
+ 
+### 5. Run tests (optional)
+ 
+```bash
+php artisan test
+```
+ 
+### 6. Run the application
+ 
+```bash
+php artisan serve
+```
+ 
+---
+ 
+ # API Documentation
+ This section contains a minimal documentation of the available endpoints.
+ For a comprehensive overview of the documentation, kindly go to http://127.0.0.1:8000/docs/api
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
-
-## About Laravel
-
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🔐 Authentication Endpoints
+ 
+### Register
+ 
+`POST /api/v1/auth/register`
+ 
+**Request Body**
+ 
+```json
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "password123"
+}
+```
+ 
+### Login
+ 
+`POST /api/v1/auth/login`
+ 
+**Response**
+ 
+```json
+{
+  "status": "success",
+  "data": {
+    "user": { ... },
+    "token": "<sanctum-token>"
+  }
+}
+```
+ 
+---
+ 
+## Product Endpoints
+ 
+> All product endpoints require authentication using bearer token
+ 
+### Fetch Products
+ 
+`GET /api/v1/product`
+ 
+Query Params:
+ 
+* `per_page` (optional)
+* `search` (optional)
+ 
+### Fetch Single Product
+ 
+`GET /api/v1/product/{product}`
+ 
+---
+ 
+## Wishlist Endpoints
+ 
+> All wishlist endpoints require authentication using bearer token
+ 
+### Fetch Wishlist Products
+ 
+`GET /api/v1/wishlist`
+ 
+Query Params:
+ 
+* `per_page`
+* `search`
+ 
+### Add Product to Wishlist
+ 
+`POST /api/v1/wishlist/{product}`
+ 
+### Remove Product from Wishlist
+ 
+`DELETE /api/v1/wishlist/{product}`
+ 
+---
+ 
+## 🧪 Testing
+ 
+This project uses **Pest** for testing.
+ 
+Run tests with:
+ 
+```bash
+php artisan test
+```
+ 
+Covered tests include:
+ 
+* Authentication (register & login)
+* Product listing & search
+* Wishlist add/remove
+* Pagination behavior
+* Authorization checks
+ 
+---
+ 
+## 📄 API Documentation
+ 
+API documentation is generated using **Scramble**.
+ 
+After running the app:
+ 
+```
+Go to http://127.0.0.1:8000/docs/api
+```
+ 
+## ✅ Best Practices Used
+ 
+* Service layer abstraction
+* DTOs for request data handling
+* API Resources for response shaping
+* Prices are stored as integers for ease and accuracy when dealing with currency conversion
+* Named routes
+* Pagination on relationships
+* Sanctum token invalidation on login
+* Services are documented with doc block anotations
+* And others
+ 
+---
+ 
+## 📌 Notes
+ 
+* Password hashing is handled via Laravel’s `hashed` cast
+* Wishlist uses a proper many-to-many relationship with products
+* Tests run against SQLite for speed and isolation
+* Unit tests are not covered because of time constraint, only feature tests are covered.

@@ -8,34 +8,49 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
+/**
+ * Class AuthService
+ *
+ * Handles user authentication and registration logic.
+ */
 final class AuthService
 {
-    public function registerUser(RegistrationDto $data)
-    {
-        $user = User::query()
-            ->create([
-                'name' => $data->name,
-                'email' => $data->email,
-                'password' => $data->password,
-            ]);
-
-        return $user;
+    public function __construct(
+        private readonly UserService $userService,
+    ) {
     }
 
     /**
-     * @throws BadRequestException
+     * Register a new user.
+     *
+     * @param  RegistrationDto  $data
+     * @return User
+     */
+    public function registerUser(RegistrationDto $data): User
+    {
+        return $this->userService->create($data);
+    }
+
+    /**
+     * Authenticate a user using email and password.
+     *
+     * @param  LoginDto  $data
+     * @return array{0: User, 1: string}  Authenticated user and access token
+     *
+     * @throws BadRequestException If credentials are invalid
      */
     public function authenticate(LoginDto $data): array
     {
-        $user = User::query()
-            ->where('email', $data->email)
-            ->first();
+        $user = $this->userService->fetchBy('email', $data->email);
 
         if (!$user) {
             throw new BadRequestException('Invalid credentials supplied');
         }
 
-        if (Auth::attempt(['email' => $data->email, 'password' => $data->password])) {
+        if (Auth::attempt([
+            'email' => $data->email,
+            'password' => $data->password,
+        ])) {
             $token = $this->generateAuthToken($user);
 
             return [$user, $token];
@@ -44,10 +59,22 @@ final class AuthService
         throw new BadRequestException('Invalid credentials supplied');
     }
 
+    /**
+     * Generate an authentication token for the given user.
+     *
+     * Ensures only a single active token exists per user
+     * by revoking all previous tokens.
+     *
+     * @param  User  $user
+     * @return string  Plain text access token
+     */
     public function generateAuthToken(User $user): string
     {
+        // Maintain a single session per user
         $user->tokens()->delete();
-        $token = $user->createToken("$user->name token")->plainTextToken;
-        return $token;
+
+        return $user
+            ->createToken("{$user->name} token")
+            ->plainTextToken;
     }
 }
